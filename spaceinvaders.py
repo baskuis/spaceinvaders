@@ -21,9 +21,10 @@ BLUE = (80, 255, 239)
 PURPLE = (203, 0, 255)
 RED = (237, 28, 36)
 
-SCREEN = display.set_mode((800, 600))
+SCREEN = display.set_mode((1200, 800))
 FONT = FONT_PATH + 'space_invaders.ttf'
 IMG_NAMES = ['ship', 'mystery',
+             'caleb-and-bas',
              'enemy1_1', 'enemy1_2',
              'enemy2_1', 'enemy2_2',
              'enemy3_1', 'enemy3_2',
@@ -42,7 +43,7 @@ class Ship(sprite.Sprite):
         sprite.Sprite.__init__(self)
         self.image = IMAGES['ship']
         self.rect = self.image.get_rect(topleft=(375, 540))
-        self.speed = 5
+        self.speed = 10
 
     def update(self, keys, *args):
         if keys[K_LEFT] and self.rect.x > 10:
@@ -110,7 +111,7 @@ class EnemiesGroup(sprite.Group):
         self.rows = rows
         self.leftAddMove = 0
         self.rightAddMove = 0
-        self.moveTime = 600
+        self.moveTime = 750#600
         self.direction = 1
         self.rightMoves = 30
         self.leftMoves = 30
@@ -140,7 +141,7 @@ class EnemiesGroup(sprite.Group):
                     if self.bottom < enemy.rect.y + 35:
                         self.bottom = enemy.rect.y + 35
             else:
-                velocity = 10 if self.direction == 1 else -10
+                velocity = 30 if self.direction == 1 else -10
                 for enemy in self:
                     enemy.rect.x += velocity
                     enemy.toggle_image()
@@ -213,7 +214,7 @@ class Blocker(sprite.Sprite):
 class Mystery(sprite.Sprite):
     def __init__(self):
         sprite.Sprite.__init__(self)
-        self.image = IMAGES['mystery']
+        self.image = IMAGES['caleb-and-bas'] # was mystery
         self.image = transform.scale(self.image, (75, 35))
         self.rect = self.image.get_rect(topleft=(-80, 45))
         self.row = 5
@@ -335,7 +336,7 @@ class SpaceInvaders(object):
         self.clock = time.Clock()
         self.caption = display.set_caption('Space Invaders')
         self.screen = SCREEN
-        self.background = image.load(IMAGE_PATH + 'background.jpg').convert()
+        self.background = image.load(IMAGE_PATH + 'new-background.jpg').convert()
         self.startGame = False
         self.mainScreen = True
         self.gameOver = False
@@ -356,7 +357,8 @@ class SpaceInvaders(object):
         self.life1 = Life(715, 3)
         self.life2 = Life(742, 3)
         self.life3 = Life(769, 3)
-        self.livesGroup = sprite.Group(self.life1, self.life2, self.life3)
+        self.life4 = Life(796, 3)
+        self.livesGroup = sprite.Group(self.life1, self.life2, self.life3, self.life4)
 
     def reset(self, score):
         self.player = Ship()
@@ -587,7 +589,8 @@ class SpaceInvaders(object):
                         self.allBlockers = sprite.Group(self.make_blockers(0),
                                                         self.make_blockers(1),
                                                         self.make_blockers(2),
-                                                        self.make_blockers(3))
+                                                        self.make_blockers(3),
+                                                        self.make_blockers(4))
                         self.livesGroup.add(self.life1, self.life2, self.life3)
                         self.reset(0)
                         self.startGame = True
